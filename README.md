@@ -17,94 +17,13 @@ last_login
 
 2. profiles
 Detail profil profesional pengguna.
-Traveloka
-+1
-LinkedIn
-+1
+
 
 profile_id (PK)
-
 user_id (FK)
-
-headline
-
-summary
-
-location
-
-industry
-
 profile_picture_url
 
-3. experiences
-Riwayat pengalaman kerja pengguna.
-LinkedIn
-+2
-liputan6.com
-+2
-ION Network Blog
-+2
-
-experience_id (PK)
-
-user_id (FK)
-
-company_name
-
-job_title
-
-start_date
-
-end_date
-
-description
-
-4. educations
-Riwayat pendidikan pengguna.
-
-education_id (PK)
-
-user_id (FK)
-
-school_name
-
-degree
-
-field_of_study
-
-start_year
-
-end_year
-
-5. skills
-Daftar keterampilan pengguna.
-LinkedIn
-+1
-ION Network Blog
-+1
-
-skill_id (PK)
-
-user_id (FK)
-
-skill_name
-
-proficiency_level
-
-6. connections
-Relasi antar pengguna.
-
-connection_id (PK)
-
-user_id (FK)
-
-connected_user_id (FK)
-
-status (e.g., pending, accepted)
-
-connected_at
-
-7. posts
+3. posts
 Konten yang dibagikan oleh pengguna.
 liputan6.com
 +3
@@ -121,67 +40,22 @@ content
 
 created_at
 
-8. comments
-Komentar pada postingan.
-LinkedIn
-+11
-liputan6.com
-+11
-LinkedIn
-+11
+4. comments
 
 comment_id (PK)
-
 post_id (FK)
-
 user_id (FK)
-
 comment_text
-
 created_at
 
 9. likes
 Suka pada postingan.
-LinkedIn
-+4
-LinkedIn
-+4
-LinkedIn
-+4
 
 like_id (PK)
-
 post_id (FK)
-
 user_id (FK)
-
 liked_at
 
-10. groups
-Grup diskusi atau komunitas.
-
-group_id (PK)
-
-name
-
-description
-
-creator_user_id (FK)
-
-created_at
-
-11. group_members
-Keanggotaan pengguna dalam grup.
-
-group_member_id (PK)
-
-group_id (FK)
-
-user_id (FK)
-
-joined_at
-
-role (e.g., member, admin)
 
 1. Autentikasi & Pengguna
 POST /api/auth/register
@@ -210,58 +84,6 @@ Mengambil profil pengguna.
 PUT /api/profiles/{user_id}
 Memperbarui profil pengguna.
 
-POST /api/profiles/{user_id}/experience
-Menambahkan pengalaman kerja.
-Medium
-+10
-Medium
-+10
-GitHub
-+10
-
-PUT /api/profiles/{user_id}/experience/{experience_id}
-Memperbarui pengalaman kerja.
-
-DELETE /api/profiles/{user_id}/experience/{experience_id}
-Menghapus pengalaman kerja.
-
-POST /api/profiles/{user_id}/education
-Menambahkan riwayat pendidikan.
-
-PUT /api/profiles/{user_id}/education/{education_id}
-Memperbarui riwayat pendidikan.
-
-DELETE /api/profiles/{user_id}/education/{education_id}
-Menghapus riwayat pendidikan.
-Software Engineering Stack Exchange
-+10
-Proxycurl
-+10
-Amazon Web Services, Inc.
-+10
-
-POST /api/profiles/{user_id}/skills
-Menambahkan keterampilan.
-
-DELETE /api/profiles/{user_id}/skills/{skill_id}
-Menghapus keterampilan.
-
-3. Koneksi
-POST /api/connections/request/{target_user_id}
-Mengirim permintaan koneksi.
-
-POST /api/connections/accept/{request_id}
-Menerima permintaan koneksi.
-Amazon Web Services, Inc.
-+3
-Buildfire
-+3
-drmowinckels.io
-+3
-
-POST /api/connections/reject/{request_id}
-Menolak permintaan koneksi.
-
 GET /api/connections
 Mengambil daftar koneksi pengguna.
 
@@ -280,12 +102,6 @@ Mengambil detail postingan.
 
 DELETE /api/posts/{post_id}
 Menghapus postingan.
-LinkedIn
-+4
-Microsoft Learn
-+4
-Kong Inc.
-+4
 
 5. Komentar
 POST /api/posts/{post_id}/comments
@@ -294,11 +110,6 @@ Menambahkan komentar pada postingan.
 GET /api/posts/{post_id}/comments
 Mengambil komentar pada postingan.
 Microsoft Learn
-+3
-Kong Inc.
-+3
-Proxycurl
-+3
 
 DELETE /api/comments/{comment_id}
 Menghapus komentar.
