@@ -4,40 +4,24 @@ Menyimpan informasi dasar pengguna.
 LinkedIn
 
 user_id (PK)
-
 email
-
 password_hash
-
 full_name
-
 created_at
-
 last_login
 
 2. profiles
 Detail profil profesional pengguna.
-
-
 profile_id (PK)
 user_id (FK)
 profile_picture_url
 
 3. posts
 Konten yang dibagikan oleh pengguna.
-liputan6.com
-+3
-Purwadhika
-+3
-LinkedIn
-+3
 
 post_id (PK)
-
 user_id (FK)
-
 content
-
 created_at
 
 4. comments
@@ -49,7 +33,6 @@ comment_text
 created_at
 
 9. likes
-Suka pada postingan.
 
 like_id (PK)
 post_id (FK)
