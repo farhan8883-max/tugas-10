@@ -1,0 +1,131 @@
+pertama intall :
+npm install jsonwebtoken bcryptjs dotenv
+
+kedua buat file .env :
+terus masukkan yang di bawah ini :
+JWT_SECRET=your_jwt_secret_key
+
+ketiga buat folder middleware dan buat file auth.js :
+masukkan code ini :
+
+// middleware/auth.js
+const jwt = require('jsonwebtoken');
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) return res.status(401).json({ message: 'Token tidak ditemukan' });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ message: 'Token tidak valid' });
+    req.user = user;
+    next();
+  });
+}
+
+const authenticateToken = require('./middleware/auth');
+
+app.get('/dashboard', authenticateToken, (req, res) => {
+  res.json({ message: 'Selamat datang di dashboard', user: req.user });
+});
+module.exports = authenticateToken;
+
+
+ke empat masukkan code ini menggantikan code post :
+
+app.post('/users', (req, res) => {
+  const { username, email, password } = req.body;
+
+  // Validasi input
+  if (!username || !email || !password) {
+    return res.status(400).json({ error: 'Semua field wajib diisi' });
+  }
+
+  // Enkripsi password
+  bcrypt.hash(password, 10, (err, hashedPassword) => {
+    if (err) {
+      console.error('Kesalahan saat mengenkripsi password:', err);
+      return res.status(500).json({ error: 'Terjadi kesalahan pada server' });
+    }
+
+    const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+    connection.query(query, [username, email, hashedPassword], (err, result) => {
+      if (err) {
+        console.error('Gagal menyimpan data pengguna:', err);
+        return res.status(500).json({ error: 'Gagal menyimpan data pengguna' });
+      }
+
+      res.status(201).json({
+        message: 'Pengguna berhasil ditambahkan',
+        userId: result.insertId,
+      });
+    });
+  });
+});
+
+
+ini bagian auth nya yang di tambahin cod nya ini :
+
+// app.js atau file utama server Anda
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
+// Endpoint login
+app.post('/auth/login', (req, res) => {
+  const { email, password } = req.body;
+
+  // Validasi input
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email dan password wajib diisi' });
+  }
+
+  // Cari pengguna berdasarkan email
+  const query = 'SELECT * FROM users WHERE email = ?';
+  connection.query(query, [email], (err, results) => {
+    if (err) {
+      console.error('Kesalahan saat mencari pengguna:', err);
+      return res.status(500).json({ message: 'Terjadi kesalahan pada server' });
+    }
+
+    if (results.length === 0) {
+      return res.status(401).json({ message: 'Email tidak ditemukan' });
+    }
+
+    const user = results[0];
+
+    // Bandingkan password
+    bcrypt.compare(password, user.password, (err, isMatch) => {
+      if (err) {
+        console.error('Kesalahan saat membandingkan password:', err);
+        return res.status(500).json({ message: 'Terjadi kesalahan pada server' });
+      }
+
+      if (!isMatch) {
+        return res.status(401).json({ message: 'Password salah' });
+      }
+
+      // Buat token JWT
+      const token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+
+      // Kembalikan token dan data pengguna (tanpa password)
+      const { password, ...userData } = user;
+      res.json({ token, user: userData });
+    });
+  });
+});
+
+yang ke lima buat SQL nya di database ini cod nya :
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
